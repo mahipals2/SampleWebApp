@@ -1,14 +1,22 @@
-node {
-    stage('Build') {
-        // Build the application
-        sh 'mvn clean install'
-    }
-    stage('Test') {
-        // Run the tests
-        sh 'mvn test'
-    }
-    stage('Deploy') {
-        // Deploy the application
-        sh 'deploy.sh'
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'docker build -t my-image .'
+                sh 'docker push my-image'
+                sh 'kubectl apply -f deployment.yaml'
+            }
+        }
     }
 }
