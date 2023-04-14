@@ -1,16 +1,14 @@
-pipeline {
-  agent any
-  stages {
-    stage('Test') {
-      steps {
-        build()
-        echo 'Hello Build'
-        echo 'Test code'
-      }
+node {
+    stage('Build') {
+        // Build the application
+        sh 'mvn clean install'
     }
-
-  }
-  environment {
-    name = 'build'
-  }
+    stage('Test') {
+        // Run the tests
+        sh 'mvn test'
+    }
+    stage('Deploy') {
+        // Deploy the application
+        sh 'deploy.sh'
+    }
 }
